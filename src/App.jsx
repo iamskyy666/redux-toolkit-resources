@@ -1,5 +1,6 @@
 import "./App.css";
-import Counter from "./features/counter/Counter";
+import CounterControl from "./components/CounterControl";
+import CounterDisplay from "./components/CounterDisplay";
 
 export default function App() {
   return (
@@ -7,10 +8,11 @@ export default function App() {
       style={{
         border: "1px solid white",
         padding: "10px",
-        borderRadius: "5px",
+        borderRadius: "10px",
       }}>
       <h2>Welcome to Redux-React App ⚛️💜</h2>
-      <Counter />
+      <CounterDisplay />
+      <CounterControl />
     </div>
   );
 }

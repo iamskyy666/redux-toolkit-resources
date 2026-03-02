@@ -5,8 +5,8 @@ export const store = configureStore({
   reducer: {
     // all reducers here, based on slice(s)/features
     counter: counterReducer,
-    user: userReducer,
+   // user: userReducer,
   },
 });
 
-// 04
+// 06
