@@ -597,3 +597,316 @@ dispatch → reducer → store
 This makes state predictable.
 
 ---
+
+If `createSlice` builds logic
+and the `store` holds global state
+
+then **`useSelector` and `useDispatch` are how our components talk to that system.**
+
+Without them, React cannot interact with Redux.
+
+---
+
+# Big Picture First
+
+In a Redux Toolkit + React app:
+
+* `useDispatch()` → sends actions to the store
+* `useSelector()` → reads data from the store
+
+That’s it conceptually.
+
+But internally, there’s much more happening.
+
+---
+
+# 1️⃣ What is `useDispatch`?
+
+`useDispatch` is a hook from **React Redux**.
+
+It gives us access to the `dispatch` function from the Redux store.
+
+### What is dispatch?
+
+`dispatch` is the only way we can trigger state changes in Redux.
+
+Nothing changes in Redux unless we dispatch an action.
+
+---
+
+## Basic Example
+
+```js
+import { useDispatch } from "react-redux";
+import { increment } from "./counterSlice";
+
+const Counter = () => {
+  const dispatch = useDispatch();
+
+  return (
+    <button onClick={() => dispatch(increment())}>
+      Increment
+    </button>
+  );
+};
+```
+
+What’s happening here?
+
+1. We call `increment()` → this creates an action object
+2. We pass that action to `dispatch`
+3. The store sends it to the reducer
+4. Reducer updates state
+5. Store notifies subscribers
+6. UI re-renders
+
+---
+
+## What Does `increment()` Actually Return?
+
+Behind the scenes:
+
+```js
+{
+  type: "counter/increment"
+}
+```
+
+If we pass data:
+
+```js
+dispatch(incrementByAmount(5))
+```
+
+The action becomes:
+
+```js
+{
+  type: "counter/incrementByAmount",
+  payload: 5
+}
+```
+
+`dispatch` simply forwards this to the store.
+
+---
+
+## Important: Dispatch Can Handle Async Too
+
+With Redux Toolkit’s `createAsyncThunk`, we can do:
+
+```js
+dispatch(fetchDoctors())
+```
+
+Even though it’s async.
+
+That works because Redux Toolkit includes thunk middleware automatically via `configureStore`.
+
+So `dispatch` is not just for plain objects anymore — it can handle async functions.
+
+That’s powerful.
+
+---
+
+# 2️⃣ What is `useSelector`?
+
+If `dispatch` sends data,
+
+`useSelector` reads data.
+
+It lets our component subscribe to the Redux store.
+
+---
+
+## Basic Example
+
+```js
+import { useSelector } from "react-redux";
+
+const Counter = () => {
+  const count = useSelector((state) => state.counter.value);
+
+  return <h1>{count}</h1>;
+};
+```
+
+Now let’s break that down carefully.
+
+---
+
+## What is `state` here?
+
+`state` is the entire Redux store state.
+
+If our store was:
+
+```js
+configureStore({
+  reducer: {
+    counter: counterReducer,
+    auth: authReducer
+  }
+})
+```
+
+Then global state looks like:
+
+```js
+{
+  counter: { value: 10 },
+  auth: { user: null }
+}
+```
+
+So inside `useSelector`, we receive that entire object.
+
+We must return the specific part we need:
+
+```js
+state.counter.value
+```
+
+---
+
+## Very Important Concept: Subscription
+
+When we use:
+
+```js
+useSelector(...)
+```
+
+React Redux subscribes that component to the store.
+
+Whenever the selected value changes:
+
+→ The component re-renders.
+
+If the selected value does NOT change:
+
+→ No re-render.
+
+That’s efficient.
+
+---
+
+## How Does It Know If It Changed?
+
+`useSelector` uses strict equality (`===`) comparison.
+
+If previous selected value !== new selected value
+→ Re-render
+
+If equal
+→ No re-render
+
+That’s why we must be careful not to create new objects unnecessarily.
+
+Example of bad practice:
+
+```js
+useSelector(state => {
+  return { count: state.counter.value }
+})
+```
+
+This creates a new object every render → always re-renders.
+
+Better:
+
+```js
+useSelector(state => state.counter.value)
+```
+
+Return primitive or memoized values.
+
+---
+
+# How `useSelector` and `useDispatch` Work Together
+
+Typical flow:
+
+```js
+const dispatch = useDispatch()
+const user = useSelector(state => state.auth.user)
+```
+
+When we click login:
+
+```js
+dispatch(loginUser(data))
+```
+
+Reducer updates `auth.user`.
+
+Since `user` changed → component re-renders.
+
+Clean loop.
+
+---
+
+# Deep Mental Model
+
+Think of the store as:
+
+🧠 Central brain
+
+Reducers as:
+
+⚙️ Rules for changing memory
+
+Dispatch as:
+
+📢 Sending commands to the brain
+
+useSelector as:
+
+👀 Watching specific memory cells
+
+---
+
+# Performance Considerations (Advanced)
+
+As our app grows (like our e-commerce or booking system):
+
+* Many components use `useSelector`
+* Many dispatch actions
+
+To keep performance strong:
+
+1. Select only what we need
+2. Avoid selecting entire objects
+3. Split large slices into smaller ones if needed
+4. Use memoized selectors for derived data (we can explore reselect later)
+
+---
+
+# Common Beginner Mistakes
+
+Since we’re serious about mastering this:
+
+❌ Trying to mutate state directly in components
+❌ Selecting entire slice when only one field is needed
+❌ Dispatching inside render (never do this)
+❌ Forgetting Provider around App
+
+---
+
+# How This Applies to Our Real Projects
+
+In our prescripto project:
+
+* `useSelector` → read doctors, appointments, user data
+* `useDispatch` → book appointment, login, update availability
+
+In our e-commerce:
+
+* `useSelector` → cart items, total price
+* `useDispatch` → add to cart, remove from cart, checkout
+
+These hooks are the bridge between UI and global state.
+
+Mastering them is non-negotiable if we want to operate at production level.
+
+---
