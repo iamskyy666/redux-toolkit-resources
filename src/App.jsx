@@ -1,4 +1,5 @@
 import "./App.css";
+import AuthCtrl from "./components/AuthCtrl";
 import CounterControl from "./components/CounterControl";
 import CounterDisplay from "./components/CounterDisplay";
 
@@ -13,6 +14,9 @@ export default function App() {
       <h2>Welcome to Redux-React App ⚛️💜</h2>
       <CounterDisplay />
       <CounterControl />
+      <AuthCtrl />
     </div>
   );
 }
+
+//8
