@@ -2,6 +2,7 @@ import "./App.css";
 import AuthCtrl from "./components/AuthCtrl";
 import CounterControl from "./components/CounterControl";
 import CounterDisplay from "./components/CounterDisplay";
+import Users from "./components/Users";
 
 export default function App() {
   return (
@@ -15,8 +16,9 @@ export default function App() {
       <CounterDisplay />
       <CounterControl />
       <AuthCtrl />
+      <Users />
     </div>
   );
 }
 
-//9
+//11
