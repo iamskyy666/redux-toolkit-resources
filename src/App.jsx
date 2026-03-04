@@ -2,6 +2,7 @@ import "./App.css";
 import AuthCtrl from "./components/AuthCtrl";
 import CounterControl from "./components/CounterControl";
 import CounterDisplay from "./components/CounterDisplay";
+import UserForm from "./components/UserForm";
 import Users from "./components/Users";
 
 export default function App() {
@@ -13,10 +14,11 @@ export default function App() {
         borderRadius: "10px",
       }}>
       <h2>Welcome to Redux-React App ⚛️💜</h2>
-      <CounterDisplay />
+      {/* <CounterDisplay />
       <CounterControl />
       <AuthCtrl />
-      <Users />
+      <Users /> */}
+      <UserForm />
     </div>
   );
 }

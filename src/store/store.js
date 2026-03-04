@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "../features/counter/counterSlice";
 import authReducer from "../features/auth/authSlice";
 import usersReducer from "../features/users/usersSlice";
+import userReducer from "../features/user/userSlice";
 
 // logger MW if we don't wanna use the React/Redux Devtools
 const loggerMiddleware = (storeAPI) => (next) => (action) => {
@@ -17,6 +18,7 @@ export const store = configureStore({
     counter: counterReducer,
     auth: authReducer,
     users: usersReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(loggerMiddleware),
