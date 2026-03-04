@@ -1,9 +1,6 @@
 import "./App.css";
-import AuthCtrl from "./components/AuthCtrl";
-import CounterControl from "./components/CounterControl";
-import CounterDisplay from "./components/CounterDisplay";
 import UserForm from "./components/UserForm";
-import Users from "./components/Users";
+import UserList from "./components/UserList";
 
 export default function App() {
   return (
@@ -19,6 +16,7 @@ export default function App() {
       <AuthCtrl />
       <Users /> */}
       <UserForm />
+      <UserList />
     </div>
   );
 }
